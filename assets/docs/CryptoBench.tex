@@ -1,0 +1,402 @@
+\documentclass{article}
+% --- Core Packages ---
+\usepackage{PRIMEarxiv}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc} % use 8-bit T1 fonts
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=myblue]{hyperref} % hyperlinks
+\usepackage{url} % simple URL typesetting
+\usepackage{booktabs} % professional-quality tables
+\usepackage{amsfonts} % blackboard math symbols
+\usepackage{nicefrac} % compact symbols for 1/2, etc.
+\usepackage{microtype} % microtypography
+\usepackage{graphicx} % images
+\usepackage{amsmath} % for math
+\usepackage{amssymb} % for symbols
+\usepackage{listings} % for code
+\usepackage{enumitem} % for lists
+\usepackage{caption} % for captions
+\usepackage{subcaption} % for subcaptions
+\usepackage{multirow} % for multi-row tables
+\usepackage{tikz} % for diagrams
+% --- Setup for TikZ Diagrams ---
+\usetikzlibrary{shapes.geometric, arrows, positioning, fit, calc}
+% --- Setup for Graphics and Hyperlinks ---
+\graphicspath{{images/}} % Set path for images
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+\definecolor{myblue}{rgb}{0.21,0.49,0.74}
+
+% --- Page Header ---
+\pagestyle{fancy}
+\thispagestyle{empty}
+\rhead{\textit{}}
+\fancyhead[LO]{CryptoBench: A Dynamic Benchmark for Expert-Level Evaluation of LLM Agents}
+% --- Title ---
+\title{CryptoBench: A Dynamic Benchmark for Expert-Level Evaluation of LLM Agents in Cryptocurrency}
+% --- Author Information ---
+% --- Document Start ---
+\begin{document}
+\maketitle
+% --- Abstract ---
+\begin{abstract}
+This paper introduces CryptoBench, the first expert-curated, dynamic benchmark designed to rigorously evaluate the real-world capabilities of Large Language Model (LLM) agents in the uniquely demanding and fast-paced cryptocurrency domain. While general-purpose agent benchmarks have advanced the evaluation of search and prediction, they fail to capture the domain-specific challenges inherent to professional crypto analysis: extreme time-sensitivity, a highly adversarial information environment, and the need to synthesize data from diverse, specialized sources like on-chain intelligence platforms and real-time Decentralized Finance (DeFi) dashboards \cite{wei2025browsecomp, mialon2023gaia}. To address this gap, our constructed a live benchmark with 50 questions per month, designed by crypto-native professionals to mirror actual analyst workflows. These tasks are categorized into a four-quadrant system: Simple Retrieval, Complex Retrieval, Simple Prediction, and Complex Prediction, to provide a granular assessment of an agent's foundational data gathering and advanced analytical skills.
+
+Our evaluation of ten LLMs, both directly and within an agentic framework, reveals a performance hierarchy and uncovers a failure mode. We observe a \textit{retrieval-prediction imbalance}, where many leading models, despite being proficient at data retrieval, demonstrate a pronounced weakness in tasks requiring predictive analysis. This highlights a problematic tendency for agents to appear factually grounded while lacking the deeper analytical capabilities to synthesize information. Furthermore, we find that employing an agentic framework can significantly alter model performance rankings, suggesting that raw model intelligence does not directly translate to effective agentic execution. 
+
+\end{abstract}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{images/3_combined_eval_scores.pdf}
+  \caption{Combined Evaluation Scores of LLM and SmolAgent Frameworks between October $12^{th}$ to October $18^{th}$. Red bars represent direct LLM evaluation, while blue bars represent performance within the SmolAgent framework.}
+  \label{fig:combined_eval_scores}
+\end{figure}
+
+\clearpage % This command forces a new page
+
+% --- Section 1: Introduction ---
+\section{Introduction}
+\label{sec:intro}
+Large Language Model (LLM) agents represent a paradigm shift in artificial intelligence, evolving from passive instruction-followers to autonomous entities capable of complex problem-solving and multi-step execution \cite{yao2022react, park2023generative}. Their potential to automate sophisticated workflows is particularly profound in high-stakes, high-reward domains like finance, where the ability to rapidly search, synthesize, and act upon vast quantities of diverse information provides a decisive competitive edge. In this context, LLM agents are not merely advanced tools for data retrieval; they are envisioned as the next generation of analytical engines, designed to navigate labyrinthine data ecosystems, from real-time market feeds and regulatory filings to social media sentiment, and deliver actionable, time-critical intelligence.
+
+However, the leap from general-purpose proficiency to specialized, expert-level performance is a significant challenge. While a generalist agent may excel at tasks like planning a trip or summarizing a news article, it often lacks the nuanced domain knowledge, methodological rigor, and source-criticality essential for professional work. The financial sector, in particular, presents significant challenges that distinguishes it from other expert domains like medicine or law. It is characterized by an unforgiving combination of: \textbf{1) extreme time-sensitivity}, where market-moving information loses its value in minutes or seconds; \textbf{2) an inherently adversarial environment}, populated by sophisticated actors employing strategies from algorithmic front-running to coordinated misinformation campaigns; and \textbf{3) an immediate, quantifiable feedback loop} in the form of market Profit and Loss (P\&L), which provides a brutal and unambiguous verdict on every decision. This challenges jointly make finance a uniquely demanding arena for evaluating agentic capabilities.
+
+Within finance, the cryptocurrency domain serves as the ultimate proving ground for these advanced agents. It includes the challenges of traditional finance to their most extreme forms while introducing novel complexities. Crypto markets operate 24/7 and are defined by a unique combination of extreme factors: \textit{high data velocity}, with blockchain transactions confirming every few seconds and market data streaming continuously; \textit{high noise}, where agents must capture valuable signals from the contradicting social media narratives on platforms like X and Telegram, anonymous developer communications, and security audits; \textit{high adversity}, in a landscape full of decentralized smart contracts, sophisticated market manipulation, and common misinformation; and \textit{highly unstructured data}, requiring the simultaneous interpretation of complex on-chain transaction graphs, technical whitepapers, and open-source code repositories. A typical task for a crypto analyst, for instance, is not simply informational but deeply analytical: \textit{``Analyze the on-chain activity of the top five holders of Token X over the past 48 hours to assess potential whale accumulation or distribution patterns.''} Mastering this environment demands capabilities far exceed standard web browsing or document analysis; it requires a mixture of data engineering, behavioral analysis, and the ability to make future predictions.
+
+Despite the urgent need for proficient agents in this domain, existing benchmarks are generally ill-suited for evaluating expert-level performance in cryptocurrency. General-purpose agent benchmarks like WebArena \cite{zhou2023webarena}, GAIA \cite{mialon2023gaia}, and AgentBench \cite{liu2024agentbench} are designed to test broad competencies but lack the requisite time-sensitivity, domain-specific tooling, and interaction with specialized data sources, such as on-chain intelligence aggregators (e.g., Nansen, Arkham) or DeFi protocol dashboards. Specifically, they do not test the critical dimension of predictive ability under radical uncertainty, which is the cornerstone of all financial analysis. Consequently, a significant and dangerous gap exists: current evaluation tools cannot measure an agent's practical ability to execute a real-world crypto analyst's workflow.
+
+To illustrate this gap, consider that a benchmark like WebArena \cite{zhou2023webarena} might test an agent's ability to execute functional instructions on a static website, but it fails to assess its capacity to parse a real-time, constantly updating DeFi protocol dashboard to identify a specific liquidity pool's Annualized Percentage Yield (APY) and understand its underlying risk factors. Similarly, GAIA \cite{mialon2023gaia} tests the ability of an agent for extracting a factual claim from a news article, but it would not test an agent's ability to cross-verify that information with real-time on-chain transaction data to confirm its realness—a crucial survival skill in an adversarial environment rife with misinformation or assess the Maximal Extractable Value (MEV) profitability on a specific chain via EigenPhi—a non-negotiable survival skill in an adversarial environment full of misinformation.
+
+To bridge this critical evaluation gap, we introduce \textbf{CryptoBench}, the first comprehensive benchmark engineered to rigorously evaluate LLM agents on realistic, expert-level cryptocurrency tasks. Our solution is built on three core design principles: \textit{expert-curated questions} that reflect the daily workflows of professional analysts, a \textit{dynamic structure} for continuous updates in a market that evolves at breakneck speed, and a focus on \textit{real-world tasks} requiring direct interaction with live, specialized platforms. To provide a granular assessment of agent capabilities, CryptoBench classifies tasks into a four-quadrant system: Simple Retrieval, Complex Retrieval, Simple Prediction, and Complex Prediction. Our evaluation using this framework uncovers a critical \textit{retrieval-prediction imbalance}, where even top-tier models that excel at data retrieval show a near-complete failure in predictive reasoning. Furthermore, we find that employing an agentic framework can significantly alter model performance rankings, suggesting that raw model intelligence does not directly translate to effective agentic execution. These core findings are visually summarized in {Figure \ref{fig:combined_eval_scores}}, which starkly illustrates both the performance gap between models and the differential impact of the agentic layer.
+
+To clearly situate CryptoBench within the existing landscape and highlight its unique contributions, we provide a comparative analysis against prior benchmarks in Table \ref{tab:crypto_benchmark_comparison}. This comparison is structured along five dimensions critical for evaluating agents in the crypto domain. \textbf{On-chain analysis} assesses the crucial ability to interact with blockchain-native data sources. The \textbf{Time} dimension distinguishes between benchmarks focused on historical data retrieval (Past), real-time awareness (Current), or forward-looking analysis (Future). The \textbf{Environment} (Env.) differentiates between static, simulated sandboxes and the dynamic, unpredictable Real-world internet. \textbf{Frequency} measures how often the benchmark is updated to maintain relevance, a vital factor in a rapidly evolving market. Finally, \textbf{Automation} (Auto) signifies the capacity for scalable and objective evaluation. As the table demonstrates, CryptoBench is the only benchmark that comprehensively addresses all these facets. It uniquely integrates real-time on-chain analysis, covers the full temporal spectrum from past events to future predictions, operates in a live environment, and is designed for continuous, automated updates. 
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Benchmark [ref]} & \textbf{On chain analysis} & \textbf{Time} & \textbf{Env.} & \textbf{Frequency} & \textbf{Auto} \\ \midrule
+CAIA \cite{wei2025caia} & \checkmark & Past & Real & One-Time & \times \\
+AMA \cite{liu2025ama} & \times & Current/Future & Real & Daily & \checkmark \\
+InvestorBench \cite{chen2025investorbench} & \times & Past & Sim. & One-Time & \times \\
+FutureX \cite{zeng2025futurex} & \times & Future & Real & Weekly & \checkmark \\
+OCE \cite{caiba2025oce} & \checkmark & Past & Sim. & One-Time & \checkmark \\
+Crypto NER \cite{caiba2025ner} & \times & Past & Real & One-Time & \checkmark \\
+CryptoTrade \cite{li2024cryptotrade} & \checkmark & Past & Sim. & One-Time & \times \\ \midrule
+CryptoBench (Ours) & \checkmark & Past/Current/Future & Real & Monthly & \checkmark \\ \bottomrule
+\end{tabular}
+\caption{Comparison with Previous Benchmarks for Cryptocurrency Analysis (Modified). Note that a \checkmark in the On chain analysis column indicates support for on-chain data, though it may not be updated regularly.}
+\label{tab:crypto_benchmark_comparison}
+\end{table}
+% --- Section 2: Related Work ---
+\section{Related Work}
+\label{sec:related_work}
+\subsection{Agentic Benchmarks}
+Recent work has focused on creating benchmarks to evaluate the general capabilities of LLM agents. For instance, benchmarks like WebArena \cite{zhou2023webarena} and BrowseComp \cite{wei2025browsecomp} assess agents' proficiency in web navigation and information retrieval on general-purpose tasks. Specifically, WebArena tests generalized browsing but lacks tasks requiring the synthesis of numerical data from multiple, structured financial APIs, a core challenge in CryptoBench. Other benchmarks, such as GAIA \cite{mialon2023gaia}, target general AI assistants with diverse, real-world tasks. AgentBench \cite{liu2024agentbench} evaluates LLMs as agents across multiple environments. SWE-bench \cite{jimenez2024swe} tests agents on real-world GitHub issues. While valuable, these benchmarks are intentionally domain-agnostic and do not capture the specialized knowledge and data interpretation skills required in finance \cite{bigeard2025finance, chen2025investorbench}. Unlike these general benchmarks, CryptoBench not only requires domain knowledge but also compels agents to interact with real, professional on-chain data analysis platforms, testing their ability to switch between and integrate highly structured and unstructured data sources.
+\subsection{Time-Sensitive Benchmarks}
+The need for benchmarks that evolve over time is increasingly recognized. For example, FreshQA \cite{vu2023freshllms} provides a dynamic question-answering benchmark that tests LLMs on up-to-date world knowledge, highlighting the challenges of handling time-sensitive information. LiveBench \cite{white2025livebench} offers contamination-limited evaluations with automatic updates. TimE \cite{chen2024time} is a multi-level benchmark for temporal prediction in real-world scenarios. CryptoBench extends this concept by not only requiring access to real-time information but also by being a "living" benchmark itself, with its templated questions designed for periodic updates. This dynamic nature ensures that the challenges remain relevant and resist being "solved" by static knowledge memorization, a crucial feature for the ever-changing crypto domain.
+\subsection{Future Prediction Benchmarks}
+Evaluating the forecasting ability of LLMs is a growing area of interest. Works such as \cite{lu2025evaluating} assess LLMs on real-world forecasting tasks by comparing them to expert human forecasters, revealing gaps in predictive accuracy. ForecastBench \cite{karger2025forecastbench} evaluates AI forecasting capabilities dynamically. FutureBench \cite{together2025futurebench} focuses on agents' future prediction in prediction markets like PolyMarket. OpenEP \cite{guan2024openep} and NaviTomorrow \cite{nako2025navitomorrow} benchmark future event prediction. CryptoBench builds upon this paradigm but tailors the predictive tasks specifically to the volatile and nuanced events within the cryptocurrency ecosystem, incorporating domain-specific metrics and challenges that are absent in broader forecasting benchmarks \cite{lu2025bizfinbench, mateega2025financeqa}.
+
+
+% --- Section 3: The CryptoBench Benchmark Design ---
+\section{The CryptoBench Benchmark}
+\label{sec:benchmark_design}
+CryptoBench is engineered from the ground up to serve as a high-fidelity proxy for the complex, dynamic, and adversarial environment of professional cryptocurrency analysis. Its architecture is not a collection of arbitrary tasks, but a carefully structured evaluation system designed to probe the core competencies required for expert-level performance. This design is guided by three foundational principles that ensure its relevance, rigor, and longevity: \textbf{Task Professionalism \& Diversity}, a commitment to being \textbf{Dynamic and Evolving}, and \textbf{Broad Platform Coverage}.
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\linewidth]{images/A_task_distribution.pdf}
+        \caption{Distribution of Task Types (N=50).}
+        \label{fig:task_dist}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\linewidth]{images/B_platform_distribution.pdf}
+        \caption{Distribution by Data Source Category.}
+        \label{fig:platform_dist}
+    \end{subfigure}
+    \caption{Statistics of the CryptoBench dataset between October $12^{th}$ to October $18^{th}$.}
+    \label{fig:dataset_stats}
+\end{figure}
+\subsection{Design Principles}
+The design of CryptoBench is guided by three core principles:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Task Professionalism \& Diversity:} To ensure ecological validity, every question in CryptoBench is meticulously crafted by a committee of crypto-native professionals, including DeFi analysts, on-chain intelligence investigators, and quantitative traders. This grounds the benchmark in the practical realities of the industry, moving beyond academic exercises to mirror the day-to-day queries and analytical workflows that define these roles. The tasks are deliberately diverse, designed to test a wide spectrum of cognitive and operational skills. They cover critical domains such as:
+        \begin{itemize}
+            \item \textbf{On-chain Intelligence:} Requiring agents to analyze a wide range of on-chain phenomena, such as the activities of whale and Key Opinion Leader (KOL) wallets, user profitability and win rates, patterns of token accumulation or distribution, and security risks like phishing wallets or potential 'Rat Trading'.
+            \item \textbf{Market Data Analysis:} Tasks involving the retrieval of historical data and the interpretation of macro-level real-time feeds, such as aggregate liquidations, open interest, funding rates, and long/short ratios.
+            \item \textbf{DeFi Protocol \& Oracle Analysis:} Questions that demand navigation of specific protocol dashboards to find information like Total Value Locked (TVL), and comparing Total Value Secured (TVS) across different oracles.
+            \item \textbf{DEX \& Derivatives Analytics:} Probing an agent's ability to interpret data from Decentralized Exchanges (DEXs) and derivatives platforms, such as funding rates, open interest, and liquidation levels.
+            \item \textbf{MEV and AI-driven Signals:} Advanced tasks requiring the analysis of MEV opportunities on specific chains and the interpretation of AI-generated trading signals from specialized platforms.
+        \end{itemize}
+        These diverse domains a holistic evaluation, preventing a model from achieving a high score by excelling in only one narrow skill, such as simple data retrieval. Instead, it measures an agent's versatility and its ability to function as a genuine analytical co-pilot, being able to combine general agent abilities with domain-specific knowledge.
+
+    \item \textbf{Dynamic and Evolving:} The cryptocurrency market is defined by its relentless pace of innovation and change; protocols emerge, narratives shift, and token standards evolve in a matter of weeks. A static benchmark in such an environment would quickly become out-moded and susceptible to contamination, where models are simply trained on the answers. To combat this, CryptoBench is designed as a \textbf{"living" benchmark}. Its questions are built on a templated framework that allows for rapid and systematic updates. Core entities within questions—such as token tickers, wallet addresses, transaction hashes, and timeframes—are treated as variables that can be periodically refreshed.
+        
+        We have established a roadmap for \textbf{quarterly updates} to the benchmark. These updates will not only refresh the data points in existing questions but will also introduce entirely new tasks that reflect emerging market narratives and DeFi primitives (e.g., questions related to restaking, modular blockchains, or new oracle designs). This dynamic structure serves two critical purposes: 1) it ensures the benchmark's \textbf{long-term relevance} by keeping pace with the market, and 2) it provides strong \textbf{resistance to contamination}, as memorizing past question-answer pairs will offer diminishing returns. This forces agents to demonstrate genuine, generalizable capabilities rather than pattern-matching against a fixed dataset.
+
+    \item \textbf{Broad Platform Coverage:} No professional crypto analyst operates using a single source of information. Expert analysis is an act of synthesis, requiring the integration of data from a mosaic of specialized, often competing, platforms. CryptoBench explicitly replicates this reality. Tasks are designed to compel agents to navigate, query, and extract data from a wide array of real-world, live platforms essential to the professional workflow. This includes:
+        \begin{itemize}
+            \item Leading on-chain intelligence aggregators for wallet profiling, transaction tracing, and address-level data.
+            \item Authoritative market data providers for price feeds, real-time trading data, user activity metrics, and historical data.
+            \item The native dashboards and analytics pages of major DeFi protocols.
+            \item DEX aggregators and information sites for swap rates and liquidity data.
+            \item Specialized platforms for futures and derivatives data, such as macro real-time liquidations, funding rates, and open interest.
+        \end{itemize}
+        This principle tests more than just an agent's web browsing ability; it evaluates its capacity for \textbf{tool orchestration}. Can the agent identify the most reliable source for a given piece of information? Can it adapt to different user interfaces and data formats? And most importantly, can it correctly synthesize conflicting or complementary information from multiple sources to arrive at a correct conclusion? By forcing interaction with the actual tools of the trade, CryptoBench provides a far more realistic assessment of an agent's practical utility than benchmarks confined to sandboxed or simplified environments.
+\end{enumerate}
+
+\subsection{Task Design}
+To move beyond a monolithic, single-score evaluation, CryptoBench employs a granular classification system that provides a nuanced, multi-dimensional view of agent capabilities. Recognizing that the tasks of a financial analyst are not uniform, we categorize each question into a \textbf{four-quadrant system} (visualized in Figure \ref{fig:task_structure}). This system is defined by two axes: the primary cognitive demand (\textbf{Retrieval vs. Prediction}) and the operational complexity (\textbf{Simple vs. Complex}). This framework allows us to precisely diagnose an agent's strengths and weaknesses, distinguishing, for example, between an agent that excels at finding facts but fails at synthesizing them, and one that can make logical predictions but struggles with accurate data extraction.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Figure1.pdf}
+    \caption{The CryptoBench Four-Quadrant Task Classification System. Tasks are categorized along two axes: Complexity (Simple vs. Complex) and Cognitive Demand (Retrieval vs. Prediction), providing a granular view of agent capabilities.}
+    \label{fig:task_structure}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Simple Retrieval (SR):} This quadrant assesses the most fundamental capability of an agent: its ability to locate and extract a single, discrete piece of information from a specified or implied source. These tasks are akin to fact-checking or targeted data lookup. Success requires accurate navigation, parsing of a webpage or data feed, and precise extraction of the target data point without further manipulation.
+        \begin{itemize}
+            \item \textbf{Core Skills Tested:} Web navigation, source identification, keyword searching, parsing of structured/unstructured text.
+            \item \textbf{Example 1:} \textit{``According to the official project documentation on GitHub, what is the total supply of the XYZ token?''}
+            \item \textbf{Example 2:} \textit{``What is the current 24-hour trading volume for the ETH/USDC pair on Uniswap V3 as reported by its official analytics page?''}
+            \item \textbf{Example 3:} \textit{``According to on-chain intelligence data, is the address \texttt{0x...} currently flagged as a 'Key Opinion Leader'? Yes/No.''}
+        \end{itemize}
+
+    \item \textbf{Complex Retrieval (CR):} This quadrant builds upon simple retrieval by requiring the agent to find and consolidate multiple related data points. The task may involve filtering a table, iterating through a list, or cross-referencing information within a single, complex source. It tests the agent's ability to handle structured data and perform multi-step extraction before presenting a final, consolidated answer.
+        \begin{itemize}
+            \item \textbf{Core Skills Tested:} Structured data extraction, list iteration, data filtering, multi-point information consolidation.
+            \item \textbf{Example 1:} \textit{``From the list of a protocol's top ten holders on Etherscan, identify the two wallets labeled as 'KOL' and retrieve their respective token balances and the percentage of total supply they hold.''}
+            \item \textbf{Example 2:} \textit{``List the last five governance proposals for the Aave protocol and provide the title and final vote count ('For' vs. 'Against') for each.''}
+            \item \textbf{Example 3:} \textit{``Find the three largest liquidity pools on the Curve Finance platform and report their current TVL and APY.''}
+        \end{itemize}
+
+    \item \textbf{Simple Prediction (SP):} This quadrant marks the transition from data extraction to data interpretation. Tasks here require the agent to perform a basic inference, calculation, or predictive judgment based on one or a few readily available data points. The prediction process is typically single-step and does not require complex synthesis across diverse domains.
+    \begin{itemize}
+        \item \textbf{Core Skills Tested:} Basic arithmetic, comparative analysis, logical deduction, application of domain-specific heuristics.
+        \item \textbf{Example 1:} \textit{``Token A has a major token unlock scheduled for next week, releasing 10\% of its circulating supply to early investors. Based on this single event, is the short-term price pressure more likely to be bullish or bearish?''}
+        \item \textbf{Example 2:} \textit{``On-chain data shows that a whale wallet, which hasn't been active for a year, just transferred 5,000 ETH to the Binance exchange. What is the most likely immediate purpose of this transfer: staking, selling, or governance voting?''}
+        \item \textbf{Example 3:} \textit{``A new stablecoin yield farm is offering a 500\% APY. Based on typical DeFi yield patterns, is this APY likely to be sustainable for more than a month? Yes/No.''}
+    \end{itemize}
+
+    \item \textbf{Complex Prediction (CP):} This is the most demanding quadrant, designed to simulate the comprehensive analytical tasks performed by senior analysts. These questions require multi-step inference, the synthesis of information from multiple, potentially conflicting sources, and the formulation of a forecast or strategic recommendation. Success demands not just accurate data retrieval but also a deep, contextual understanding of market dynamics and on-chain behaviors.
+        \begin{itemize}
+            \item \textbf{Core Skills Tested:} Multi-source data synthesis, causal inference, predictive modeling, pattern recognition, strategic assessment.
+            \item \textbf{Example 1:} \textit{``Analyze the trading history of address \texttt{0x...} over the past 7 days, considering its average trade size, frequency, and choice of assets, to forecast its likely number of buy and sell transactions for the upcoming week.''}
+            \item \textbf{Example 2:} \textit{``Compare the tokenomics of Project A (high inflation, utility-focused) and Project B (fixed supply, governance-focused). Based on current market narratives around tokenomics, which one is likely to attract more long-term investors?''}
+            \item \textbf{Example 3:} \textit{``Given the recent security audit report for a new lending protocol which highlighted two medium-risk vulnerabilities, and considering the current bearish market sentiment, provide a risk assessment score (1-5) for depositing assets into this protocol.''}
+        \end{itemize}
+\end{itemize}
+
+This four-quadrant system provides a powerful diagnostic tool. An agent that scores highly on SR and CR but poorly on SP and CP is a competent data retriever but an ineffective analyst. Conversely, an agent that scores well on prediction tasks but fails at retrieval may be prone to "hallucinating" plausible but factually incorrect conclusions. A truly expert-level agent must demonstrate proficiency across all four quadrants.
+
+\begin{table}[h!]
+\centering
+\caption{Illustrative Examples of Core Assessment Capabilities in CryptoBench.}
+\label{tab:illustrative_examples}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Capability} & \textbf{Abstracted Question Example} \\ \midrule
+\multirow{2}{*}{Real-time Factual Retrieval} & "Does address \texttt{[address\_hash]} currently hold a 'Key Opinion Leader' \\ & designation according to our on-chain intelligence feed?" \\ \addlinespace
+\multirow{2}{*}{Historical Data Aggregation} & "What were the opening and closing market capitalizations for token \\ & \texttt{[token\_address]} on \texttt{[date]}?" \\ \addlinespace
+\multirow{2}{*}{Cross-Entity Correlation} & "Compare the quarterly returns of \texttt{[Asset A]} and \texttt{[Asset B]} for \texttt{[Quarter, Year]} \\ & and identify the outperformer." \\ \addlinespace
+\multirow{2}{*}{Behavioral Pattern Inference} & "Analyze the trading history of address \texttt{[address\_hash]} over the past 7 days to forecast \\ & its likely number of buy and sell transactions for the upcoming week." \\ \addlinespace
+\multirow{2}{*}{Short-term Market Prediction} & "Based on current market volatility, which three crypto assets are most likely \\ & to experience the highest liquidation volumes in the next 24 hours?" \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Dataset Construction and Quality Control}
+The credibility of any benchmark rests on the quality of its dataset. Recognizing this, the construction of CryptoBench was a meticulous, multi-stage process designed to produce questions and answers of the highest clarity, relevance, and verifiability. This process was a collaboration involving a dedicated team of crypto-native professionals, governed by a rigorous peer-verification protocol (visualized in Figure \ref{fig:construction_pipeline}) designed to eliminate ambiguity and ensure every question represents a valid, real-world analytical challenge.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{images/Figure2.pdf}
+    \caption{The CryptoBench Dataset Construction and Dynamic Update Pipeline. The top panel illustrates the rigorous multi-stage verification protocol for creating question templates. The bottom panel shows the monthly process for generating fresh, solvable questions from the template pool to ensure the benchmark's timeliness and relevance.}
+    \label{fig:construction_pipeline}
+\end{figure}
+
+\subsubsection{Expert-Led Curation}
+The foundation of CryptoBench is human expertise. The benchmark was constructed by a curated team of crypto-native professionals with deep, practical experience in the field. This team included:
+\begin{itemize}
+    \item \textbf{DeFi Analysts:} Experts accustomed to evaluating protocol health, yield farming strategies, and tokenomic models.
+    \item \textbf{On-Chain Intelligence Investigators:} Specialists skilled in using block explorers and advanced analytics platforms to trace fund flows, identify sophisticated actors (whales, market makers), and detect anomalous behavior.
+    \item \textbf{Quantitative Traders:} Professionals who rely on precise, timely data to build and execute trading models.
+\end{itemize}
+
+This diversity of expertise ensures that the questions are not merely academic but are grounded in the tangible, high-stakes tasks that define professional work in the cryptocurrency space.
+
+\subsubsection{Rigorous Multi-Stage Verification Protocol}
+To ensure each question is unambiguous, relevant, and has a clear, verifiable answer, we implemented a stringent three-stage validation protocol. A question was only included in the final dataset if it achieved unanimous consensus across all stages:
+
+\begin{enumerate}
+    \item \textbf{Stage 1: Generation and Ground-Truthing.} An initial expert (the "Author") drafts a question based on a real-world scenario. Crucially, the Author must also provide a detailed "gold-standard" answer, a step-by-step solution path describing how the answer can be obtained, and direct links to the primary sources required. This initial ground-truthing ensures that every question is solvable from the outset.
+
+    \item \textbf{Stage 2: Adversarial Validation.} The drafted question is then passed to a second expert (the "Validator") who has no knowledge of the pre-compiled answer. The Validator's role is to act as an independent, adversarial agent. They attempt to answer the question from scratch, documenting their own process. They then compare their result to the Author's. This stage is designed to identify potential failure points:
+        \begin{itemize}
+            \item \textbf{Clarity:} Is the question phrased in a way that could be misinterpreted?
+            \item \textbf{Source Reliability:} Is the specified data source stable and authoritative?
+            \item \textbf{Answer Stability:} For real-time data, is the answer likely to fluctuate so rapidly as to be unverifiable?
+            \item \textbf{Feasibility:} Can the answer be reasonably obtained within the constraints of a typical agent's operational limits?
+        \end{itemize}
+
+    \item \textbf{Stage 3: Final Adjudication and Standardization.} If any discrepancy arises between the Author and the Validator, the question is escalated to a third, senior expert (the "Adjudicator"). The Adjudicator reviews the arguments from both sides, makes a final determination on the question's validity, and may propose modifications to improve its clarity. This stage also serves to standardize phrasing, difficulty ratings, and formatting across the entire benchmark, ensuring consistency.
+\end{enumerate}
+
+\subsubsection{Systematic Mitigation of Ambiguity}
+Financial and on-chain data are notoriously noisy and can be presented differently across platforms. A primary focus of our quality control was the systematic elimination of ambiguity. We implemented several specific measures:
+\begin{itemize}
+    \item \textbf{Source Specificity:} Questions explicitly name the required data source whenever possible (e.g., "as reported on the protocol's official dashboard," "according to CoinGecko's API," "on the Etherscan token holder chart"). This prevents agents from using unreliable or outdated third-party articles.
+    \item \textbf{Metric Definition:} We avoid ambiguity by defining metrics precisely. Questions avoid vague terms like "market size," "users," or "trading activity." For instance, instead of asking for "market size," a question will specify "circulating market capitalization" or "Fully Diluted Valuation (FDV)." Similarly, a query about "users" is refined to "daily active addresses," and "trading activity" is clarified as "24-hour on-chain transaction volume."
+    \item \textbf{Temporal Bounding:} For questions involving time-sensitive data, clear timeframes are provided (e.g., "in the last 24 hours," "during Q1 2024"). For highly volatile, real-time numerical answers, we establish clear tolerance ranges for evaluation (e.g., a ±5\% margin for TVL figures) to account for minor fluctuations during the evaluation period.
+\end{itemize}
+
+\section{Experiments}
+\label{sec:experiments}
+To rigorously assess the capabilities of modern LLM agents against the challenges posed by CryptoBench, we designed a comprehensive experimental setup. This section details the selection of models, the sophisticated protocol used for evaluation, and the metrics employed to derive meaningful insights from the results.
+
+\subsection{Evaluated Models and Agentic Framework}
+To establish a robust and comprehensive baseline, we evaluated ten state-of-the-art LLM agents. Our selection was curated to represent the cutting edge of both commercially available, closed-source models and leading open-source alternatives, all of which are recognized for their advanced prediction and tool-use capabilities. The models are: \textbf{Grok-4 (Web)}, \textbf{GPT-5} \cite{openai2025gpt5}, \textbf{Grok-4} \cite{xai2025grok4}, \textbf{Grok-4 Fast} \cite{xai2025grok4fast}, \textbf{Qwen3-Max} \cite{qwen2025qwen3}, \textbf{Claude 4.1 Opus} \cite{anthropic2025claudeopus41}, \textbf{DeepSeek R1} \cite{deepseek2025r1}, \textbf{Claude 4.5 Sonnet} \cite{anthropic2025claudesonnet45}, \textbf{Gemini 2.5 Pro} \cite{google2025gemini25}, and \textbf{GPT-OSS 120B} \cite{openai2025gptoss}. Except for Grok-4 (Web), which was evaluated via its native web interface, all other models were accessed through their online versions on OpenRouter.
+
+This selection provides a diverse cross-section of the current AI landscape, from flagship models designed for complex, multi-turn predictive analysis to more agile, performance-optimized variants. To ensure a fair and standardized comparison, each model was integrated into an identical agentic framework. This framework equipped each LLM with a single, powerful tool: a \textit{web-browsing agent} capable of performing fundamental actions such as navigating to a URL, searching the web with a query, and extracting textual content from a webpage \cite{comanici2025gemini}. No model was given preferential access to proprietary APIs or specialized tools; their performance depended solely on their ability to formulate a plan for the task and effectively wield this general-purpose browsing tool to interact with the live, real-world platforms required by CryptoBench. This setup mirrors a realistic scenario where an agent must operate on the open internet to solve domain-specific problems.
+
+\subsection{Evaluation Protocol}
+Evaluating complex, open-ended responses in a dynamic domain like finance requires a more nuanced approach than simple string matching or binary correct/incorrect scoring. Therefore, we employ a sophisticated evaluation protocol centered on an \textit{LLM-as-a-Judge} framework \cite{zheng2023judging}, which combines the scalability of automated evaluation with the nuanced judgment of human expertise.
+
+Our protocol is guided by a detailed, multi-level rubric that scores each agent's final response on a scale of 0 to 3. This granular scoring system is designed to capture degrees of correctness and provide insight into failure modes:
+
+\begin{itemize}
+    \item \textbf{Score 3 (Completely Correct):} The agent provides a factually accurate answer that directly and fully addresses the question. All numerical values are within the acceptable tolerance, and the conclusion is sound.
+    \item \textbf{Score 2 (Mostly Correct):} The agent's response is substantially correct and demonstrates a correct approach, but contains minor inaccuracies. This could be a small miscalculation, a partially incomplete list, or a correct conclusion derived from slightly flawed premises.
+    \item \textbf{Score 1 (Partially Correct):} The agent shows some understanding of the task and may have successfully retrieved some relevant information, but the final answer is incorrect. This score acknowledges a valid attempt but an ultimate failure in execution or prediction.
+    \item \textbf{Score 0 (Incorrect):} The agent's response is completely wrong, irrelevant to the question, a clear hallucination, or the agent fails to produce any answer at all.
+\end{itemize}
+
+To account for the high volatility of real-time financial data, we apply a \textbf{±5\% tolerance margin} for any question requiring a numerical answer that is subject to market fluctuations (e.g., prices, TVL, market cap). This prevents an agent from being unfairly penalized for minor discrepancies caused by data-fetching latency. The LLM-judge is provided with the original question, the agent's full response trace, the ground-truth answer, and this detailed rubric to ensure consistent and fair scoring across all models. This approach allows us to move beyond simple success/fail metrics and capture the crucial difference between a near-miss and a complete operational breakdown.
+
+\subsection{Evaluation Metrics}
+To aggregate the fine-grained scores from our rubric into a clear and interpretable measure of performance, we compute the \textbf{Average Success Rate}. This metric provides a normalized score for each model, reflecting its overall proficiency on the benchmark. It is calculated by summing the scores awarded to a model across all questions and dividing by the maximum possible score, then expressing the result as a percentage.
+
+The formula is as follows:
+\[
+\text{Average Success Rate} = \left( \frac{\sum_{i=1}^{N} \text{score}_i}{N \times 3} \right) \times 100\%.
+\]
+where $N$ is the total number of questions and 3 is the maximum possible score for a single question.
+
+\section{Results and Analysis}
+\label{sec:results}
+Our experiments provide a multi-faceted view of current LLM capabilities on expert-level cryptocurrency tasks. The results highlight a clear performance hierarchy among models and reveal specific strengths and weaknesses when evaluated through both direct prompting (LLM Eval) and an agentic framework (SmolAgent \cite{roucher2025smolagents}).
+
+\subsection{Overall Performance: LLM vs. Agentic Framework}
+We first present the overall performance of the evaluated models. Figure \ref{fig:overall_performance} contrasts the results from direct LLM evaluation against those from the SmolAgent framework, revealing how the addition of an agentic layer alters model rankings and capabilities.
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{images/1_llm_eval_scores.pdf}
+        \caption{LLM Evaluation Scores.}
+        \label{fig:llm_eval_scores}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{images/2_smolagent_eval_scores.pdf}
+        \caption{SmolAgent Evaluation Scores.}
+        \label{fig:smolagent_eval_scores}
+    \end{subfigure}
+    \caption{Overall Performance Comparison between October $12^{th}$ to October $18^{th}$. (a) Direct LLM evaluation results, showing a wide performance spread. (b) SmolAgent evaluation results, highlighting the impact of an agentic framework on model performance.}
+    \label{fig:overall_performance}
+\end{figure}
+
+In the direct LLM evaluation (Figure \ref{fig:llm_eval_scores}), there is a significant performance gap. \textbf{Grok-4 (Web)} emerges as the definitive leader with an average score of 1.32, substantially outperforming all other models. \textbf{GPT-5} follows at a distant second with a score of 0.90. The performance then steps down to a competitive cluster including \textbf{Grok-4 Fast} (0.74), \textbf{GPT-OSS 120B} (0.70), and \textbf{Grok-4} (0.68). The lower-performing models, such as DeepSeek R1 and Gemini 2.5 Pro, score below 0.40, indicating significant challenges with the benchmark's tasks.
+
+When deploying these models within the SmolAgent framework (Figure \ref{fig:smolagent_eval_scores}), the performance landscape shifts. While the absolute scores are different, the trend of Grok models performing strongly continues, with \textbf{Grok-4} leading at a score of 0.84, followed by \textbf{Grok-4 Fast} at 0.68. Interestingly, models like Qwen3-Max (0.64) and Gemini 2.5 Pro (0.56) show relatively stronger performance in the agentic setup compared to their direct evaluation counterparts. This suggests that some models are better able to leverage an agentic structure for planning and tool use, even if their raw, direct-response capabilities are lower.
+
+\subsection{Performance by Task Difficulty and Family}
+To understand the underlying drivers of performance, we analyzed the results based on task difficulty (Simple vs. Complex) and task family (Retrieval vs. Prediction).
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{images/C_performance_by_difficulty.pdf}
+        \caption{Performance by Task Difficulty.}
+        \label{fig:perf_by_difficulty}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{images/D_performance_by_task_family.pdf}
+        \caption{Performance by Task Family.}
+        \label{fig:perf_by_family}
+    \end{subfigure}
+    \caption{Performance Breakdown between October $12^{th}$ to October $18^{th}$. (a) Comparison of model accuracy on Simple versus Complex tasks. (b) Comparison of accuracy on Retrieval versus Prediction tasks, revealing distinct model strengths.}
+    \label{fig:performance_breakdown}
+\end{figure}
+
+As shown in Figure \ref{fig:perf_by_difficulty}, all models perform better on Simple tasks than on Complex ones, which is expected. However, the performance degradation varies. \textbf{Grok-4 (Web)} maintains the highest performance in both categories but experiences a drop from 49.3\% on Simple tasks to 39.5\% on Complex tasks. In contrast, \textbf{GPT-5} shows a more pronounced drop, from 44.9\% on Simple tasks to just 17.3\% on Complex tasks, indicating a significant struggle with multi-step reasoning or synthesis.
+
+The breakdown by task family (Figure \ref{fig:perf_by_family}) reveals even more striking differences. Models exhibit a strong preference for either retrieval or prediction. \textbf{Grok-4 (Web)} and \textbf{GPT-5} are clearly retrieval-specialized, with retrieval scores (50.0\% and 41.2\%, respectively) that are far superior to their prediction scores. In particular, GPT-5's prediction accuracy is only 6.25\%, suggesting a profound weakness in inferential tasks despite its strong data-gathering ability. Conversely, some models like Gemini 2.5 Pro show a slightly better aptitude for prediction (16.7\%) over retrieval (10.8\%), hinting at different architectural strengths.
+
+\subsection{Performance Across Macro Categories}
+Analyzing performance across different crypto-specific domains (Figure \ref{fig:performance_radar}) highlights areas of specialized knowledge. Most models, particularly top-performers like Grok-4 (Web) and GPT-5, show their highest proficiency in the \textbf{Other} category, which often involves more general knowledge or less domain-specific data sources. Performance in specialized areas like \textbf{DeFi Analytics} and \textbf{Derivatives Data} is also relatively strong for top models. However, categories requiring deep, niche data interaction, such as \textbf{DEX Data} and \textbf{On-chain Intelligence}, prove to be significant challenges for almost all models except the very best, indicating a clear gap in their ability to interact with specialized financial data platforms.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/E_performance_by_category_radar.pdf}
+  \caption{Performance Profile by Macro Category between October $12^{th}$ to October $18^{th}$. The radar chart shows model proficiency across five key crypto domains. Stronger performance is observed in categories requiring less specialized data interaction.}
+  \label{fig:performance_radar}
+\end{figure}
+
+\subsection{Granular Performance by Task Quadrant}
+A four-quadrant analysis provides the most detailed view of model capabilities (Figure \ref{fig:performance_quadrant}). This breakdown confirms the trends observed earlier. \textbf{GPT-5}'s profile is particularly stark: it achieves an impressive 58.8\% in \textbf{Simple Retrieval} but collapses to under 7\% in both \textbf{Simple Prediction} and \textbf{Complex Prediction}. This suggests an agent that is excellent at finding specific facts but almost incapable of reasoning from them. \textbf{Grok-4 (Web)} demonstrates a more balanced, albeit still retrieval-dominant, profile, scoring well in both Simple (54.9\%) and Complex (45.1\%) Retrieval. Interestingly, models like Grok-4 and Grok-4 Fast show relatively competent performance in \textbf{Complex Retrieval} and \textbf{Complex Prediction}, suggesting that their architectures may be better suited for multi-step reasoning than some higher-ranked models, even if their simple retrieval skills are weaker.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{images/F_performance_by_task_quadrant.pdf}
+  \caption{Performance by Task Quadrant between October $12^{th}$ to October $18^{th}$. This chart breaks down performance into four distinct types, revealing that most models excel at Simple Retrieval while struggling significantly with any form of prediction.}
+  \label{fig:performance_quadrant}
+\end{figure}
+
+\subsection{Qualitative Analysis of Failure Modes}
+Through manual analysis of incorrect responses, we identified several recurring failure modes. Below, we detail each with illustrative examples from our evaluations.
+
+\subsubsection{Shallow Search and Source Fidelity Failure}
+A recurrent failure mode is the agent's inability to prioritize authoritative data sources. For a question inquiring about the current TVL of a major DeFi protocol, a top-performing agent conducted a general web search and retrieved a value from a three-month-old blog post mentioning the TVL, reporting this outdated figure. It failed to navigate to the protocol's official, real-time analytics page, where the correct answer resided. This indicates a severe lack of source reliability awareness.
+
+\subsubsection{Stale Information}
+Agents frequently retrieve outdated cached information that does not reflect the current, highly volatile market state. In a task assessing the 24-hour liquidation ratio on Binance for BTC contracts, the agent reported approximately 14.1\% (shorts: \$2.91M, total: \$20.66M), but the reference was 79.63\%. This deviation arose from using cached search results from hours prior, ignoring the rapid shifts in liquidation data.
+
+\subsubsection{Integration Error}
+Agents often successfully retrieve multiple correct data points but fail to perform the accurate calculation or synthesis. For comparing quarterly returns of BTC and SOL in Q1 2025, the agent correctly fetched both return figures but erroneously concluded they were identical (SOL vs. SOL), missing the reference outperformer (BTC). This highlights deficiencies in basic comparative arithmetic despite sound data gathering.
+
+\subsubsection{Prediction Hallucination}
+In predictive tasks, agents construct elaborate but fabricated narratives to justify unsupported predictions. When forecasting the top three trending tokens on gmgn.ai with market caps under \$100M, the agent predicted eloncoin, POKE/PokeBattle, and PFP/Pumpfun Pepe, citing GeckoTerminal data instead of aligning with gmgn.ai. The reference was DRIFT, Fartcoin, and ME, revealing hallucinated rankings unsupported by the required source.
+
+These failure modes align with observations in predictive benchmarks, where LLMs struggle with accurate forecasting due to hallucination and poor integration of real-time data \cite{lu2025evaluating, paleka2025pitfalls, karger2025forecastbench}.
+
+\section{Discussion}
+\label{sec:discussion}
+Our evaluation on CryptoBench reveals a critical gap between the perceived capabilities of modern LLM agents and the practical demands of expert financial analysis. The results underscore three key themes: the fallacy of equating data retrieval with analytical competence, the nuanced relationship between a model's raw intelligence and its agentic effectiveness, and the persistent challenge of interacting with specialized data platforms.
+
+The most significant finding is the stark retrieval-prediction imbalance. Many top models excel at finding discrete facts, creating a "veneer of competence." However, this proficiency vanishes when tasks require even simple predictive reasoning. This highlights that current models are better equipped as sophisticated search engines than as analysts, a crucial failure in a domain where value is derived from interpretation, not just information. This suggests that existing training paradigms, focused on factual recall, are insufficient for developing the inferential skills required for financial analysis.
+
+Furthermore, our results show that raw model intelligence does not guarantee effective agentic performance. The shift in rankings between direct LLM evaluation and the agentic framework indicates that the ability to plan and use tools is a distinct skill. A powerful LLM can be bottlenecked by a simple agent framework, suggesting that progress requires co-designing both better models and more sophisticated agentic structures.
+
+Finally, the qualitative analysis reveals a recurring "last mile" problem. Agents struggle with source fidelity, often choosing outdated, easily scraped articles over authoritative, real-time dashboards. Their inability to parse the complex, dynamic interfaces of specialized platforms for on-chain and DEX data remains a major barrier. This points to a need for domain-specific tools that go beyond generic web browsing.
+
+
+% --- Section 7: Conclusion ---
+\section{Conclusion}
+\label{sec:conclusion}
+In this paper, we introduced CryptoBench, a novel and challenging benchmark designed to evaluate LLM agents on real-world cryptocurrency analysis tasks. Our comprehensive evaluation reveals that the current generation of agents, despite their impressive general capabilities, fall significantly short of expert-level performance in this demanding domain. We identified a surprising inversion in performance on retrieval versus prediction tasks, a near-total failure at a specific difficulty threshold, and a consistent inability to handle complex on-chain analysis. CryptoBench demonstrates that the next frontier for financial LLM agents is not just better tool use, but the development of domain-specific prediction architectures capable of navigating adversarial and rapidly evolving information landscapes. We release CryptoBench as a vital, evolving resource to catalyze the development of more robust, reliable, and expert-level financial agents.
+% --- Bibliography ---
+\bibliographystyle{unsrt}
+\bibliography{references} % Assuming you have a references.bib file
+\end{document}
