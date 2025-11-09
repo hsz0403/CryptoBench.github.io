@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
+    <div class="bg-grid"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-noise"></div>
     <header class="navbar">
         <div class="nav-content">
             <a class="logo" href="#top">CryptoBench</a>
@@ -188,74 +191,74 @@
         <section class="section" id="figures">
             <div class="section-header">
                 <h2>Figures from the Paper</h2>
-                <p class="section-subtitle">Each PDF below is embedded separately with the description taken from the corresponding paragraph in <code>main.tex</code>.</p>
+                <p class="section-subtitle">Each PDF is rendered full-width so readers can inspect the benchmark visuals without leaving the page. Captions are sourced from the relevant sections of <code>main.tex</code>.</p>
             </div>
-            <div class="figure-grid">
-                <article class="figure-card">
+            <div class="figure-stack">
+                <article class="figure-full">
                     <h3>Figure 1. Combined Evaluation Scores</h3>
-                    <p>This overview contrasts direct LLM evaluation with the SmolAgent setup between 12–18 Oct, showing how agentic scaffolding can reshuffle rankings.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/3_combined_eval_scores.pdf#toolbar=0&view=fitH" title="Combined Evaluation Scores"></iframe>
-                    <a class="download-link" href="assets/pdfs/3_combined_eval_scores.pdf" download>Download PDF</a>
+                    <p>This overview contrasts direct LLM evaluation with the SmolAgent setup between 12–18 Oct, showing how agentic scaffolding reshuffles rankings.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/3_combined_eval_scores.pdf#toolbar=0&view=FitH" title="Combined Evaluation Scores"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/3_combined_eval_scores.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 2. LLM-only Leaderboard</h3>
                     <p>Direct prompts reveal Grok-4 (Web) clearly leading at 1.32 points, with GPT-5 trailing at 0.90 and a long tail of underperforming models.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/1_llm_eval_scores.pdf#toolbar=0&view=fitH" title="LLM Evaluation Scores"></iframe>
-                    <a class="download-link" href="assets/pdfs/1_llm_eval_scores.pdf" download>Download PDF</a>
+                    <iframe class="figure-embed" src="assets/pdfs/1_llm_eval_scores.pdf#toolbar=0&view=FitH" title="LLM Evaluation Scores"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/1_llm_eval_scores.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 3. SmolAgent Leaderboard</h3>
                     <p>When the same models run inside SmolAgent, Grok-4 still leads but Qwen3-Max and Gemini 2.5 Pro close the gap—evidence that planning and tool use matter.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/2_smolagent_eval_scores.pdf#toolbar=0&view=fitH" title="SmolAgent Evaluation Scores"></iframe>
-                    <a class="download-link" href="assets/pdfs/2_smolagent_eval_scores.pdf" download>Download PDF</a>
+                    <iframe class="figure-embed" src="assets/pdfs/2_smolagent_eval_scores.pdf#toolbar=0&view=FitH" title="SmolAgent Evaluation Scores"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/2_smolagent_eval_scores.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 4. Task Distribution</h3>
-                    <p>A balanced mix of the four quadrants ensures no single ability can dominate the benchmark or inflate scores.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/A_task_distribution.pdf#toolbar=0&view=fitH" title="Task Distribution"></iframe>
-                    <a class="download-link" href="assets/pdfs/A_task_distribution.pdf" download>Download PDF</a>
+                    <p>CryptoBench balances the four quadrants so no single capability can game the benchmark or inflate scores.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/A_task_distribution.pdf#toolbar=0&view=FitH" title="Task Distribution"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/A_task_distribution.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 5. Platform Distribution</h3>
-                    <p>CryptoBench compels agents to interact with more than 20 live data surfaces, from on-chain explorers to intent-based MEV dashboards.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/B_platform_distribution.pdf#toolbar=0&view=fitH" title="Platform Distribution"></iframe>
-                    <a class="download-link" href="assets/pdfs/B_platform_distribution.pdf" download>Download PDF</a>
+                    <p>Agents must interact with 20+ live surfaces—from on-chain explorers to intent-based MEV dashboards—to answer correctly.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/B_platform_distribution.pdf#toolbar=0&view=FitH" title="Platform Distribution"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/B_platform_distribution.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 6. Performance by Difficulty</h3>
                     <p>All models degrade on complex tasks; Grok-4 drops roughly 10 percentage points while GPT-5 collapses by more than 25.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/C_performance_by_difficulty.pdf#toolbar=0&view=fitH" title="Performance by Difficulty"></iframe>
-                    <a class="download-link" href="assets/pdfs/C_performance_by_difficulty.pdf" download>Download PDF</a>
+                    <iframe class="figure-embed" src="assets/pdfs/C_performance_by_difficulty.pdf#toolbar=0&view=FitH" title="Performance by Difficulty"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/C_performance_by_difficulty.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 7. Retrieval vs. Prediction</h3>
                     <p>The retrieval–prediction imbalance is stark: GPT-5 reaches 41% on retrieval but only 6.25% on prediction.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/D_performance_by_task_family.pdf#toolbar=0&view=fitH" title="Performance by Task Family"></iframe>
-                    <a class="download-link" href="assets/pdfs/D_performance_by_task_family.pdf" download>Download PDF</a>
+                    <iframe class="figure-embed" src="assets/pdfs/D_performance_by_task_family.pdf#toolbar=0&view=FitH" title="Performance by Task Family"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/D_performance_by_task_family.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 8. Macro-category Radar</h3>
                     <p>Top models perform best in general “Other” tasks, while DeFi analytics, DEX data, and derivatives remain challenging.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/E_performance_by_category_radar.pdf#toolbar=0&view=fitH" title="Performance by Category"></iframe>
-                    <a class="download-link" href="assets/pdfs/E_performance_by_category_radar.pdf" download>Download PDF</a>
+                    <iframe class="figure-embed" src="assets/pdfs/E_performance_by_category_radar.pdf#toolbar=0&view=FitH" title="Performance by Category"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/E_performance_by_category_radar.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 9. Task Quadrants</h3>
                     <p>Simple retrieval is saturated, but complex prediction exposes the largest gaps, confirming the need for multi-hop reasoning.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/F_performance_by_task_quadrant.pdf#toolbar=0&view=fitH" title="Performance by Quadrant"></iframe>
-                    <a class="download-link" href="assets/pdfs/F_performance_by_task_quadrant.pdf" download>Download PDF</a>
+                    <iframe class="figure-embed" src="assets/pdfs/F_performance_by_task_quadrant.pdf#toolbar=0&view=FitH" title="Performance by Quadrant"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/F_performance_by_task_quadrant.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 10. Four-Quadrant Framework</h3>
-                    <p>Illustrates the Simple/Complex × Retrieval/Prediction matrix that underpins task authoring and score reporting.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/Figure1.pdf#toolbar=0&view=fitH" title="Quadrant Framework"></iframe>
-                    <a class="download-link" href="assets/pdfs/Figure1.pdf" download>Download PDF</a>
+                    <p>Illustrates the Simple/Complex × Retrieval/Prediction matrix that guides task authoring and score reporting.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/Figure1.pdf#toolbar=0&view=FitH" title="Quadrant Framework"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/Figure1.pdf" download>Download PDF</a></p>
                 </article>
-                <article class="figure-card">
+                <article class="figure-full">
                     <h3>Figure 11. Benchmark Pipeline</h3>
                     <p>Shows the end-to-end workflow: question authoring, data capture, agent execution, scoring, and diagnostics.</p>
-                    <iframe class="figure-frame" src="assets/pdfs/Figure2.pdf#toolbar=0&view=fitH" title="Benchmark Pipeline"></iframe>
-                    <a class="download-link" href="assets/pdfs/Figure2.pdf" download>Download PDF</a>
+                    <iframe class="figure-embed" src="assets/pdfs/Figure2.pdf#toolbar=0&view=FitH" title="Benchmark Pipeline"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/Figure2.pdf" download>Download PDF</a></p>
                 </article>
             </div>
         </section>
