@@ -4,221 +4,276 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CryptoBench — A Dynamic Benchmark for Expert-Level LLM Agents</title>
-    <meta name="description" content="Landing page for the CryptoBench paper: benchmark motivation, methodology, results, and downloadable figures." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/style.css" />
-    <script defer src="assets/js/app.js"></script>
 </head>
 <body>
-    <div class="bg-grid"></div>
-    <div class="bg-gradient"></div>
-    <div class="bg-noise"></div>
-
-    <header class="hero" id="top">
-        <nav class="nav">
+    <header class="navbar">
+        <div class="nav-content">
             <a class="logo" href="#top">CryptoBench</a>
-            <div class="nav-links">
-                <a href="#abstract">摘要</a>
-                <a href="#contrib">贡献</a>
-                <a href="#method">方法</a>
-                <a href="#results">结果</a>
-                <a href="#downloads">下载</a>
-            </div>
-            <a class="pill" href="#downloads">Paper Kit</a>
-        </nav>
-
-        <div class="hero-content">
-            <p class="tag">CryptoBench · Expert-Level Evaluation · Oct 12–18 Window</p>
-            <h1>面向加密领域的真实世界 LLM Agent 基准。</h1>
-            <p class="lede">
-                CryptoBench 是第一套由加密原生专业人士构建的动态 benchmark，每月发布 50 道任务，覆盖 on-chain 情报、DeFi 监控、衍生品、MEV 和预测场景。本文展示 benchmark 设计、数据构建以及 10 个前沿模型（含 SmolAgent 框架）的评测结果。
-            </p>
-            <div class="hero-actions">
-                <a class="btn primary" href="#abstract">阅读摘要</a>
-                <a class="btn ghost" href="assets/docs/CryptoBench.tex" download>下载 TeX 原文</a>
-            </div>
-            <ul class="hero-highlights">
-                <li><span>50</span> 新任务 / 月</li>
-                <li><span>4</span> 检测象限</li>
-                <li><span>20+</span> 实时数据平台</li>
-                <li><span>10</span> LLM & Agent 组合</li>
+            <ul class="nav-links">
+                <li><a href="#abstract">Abstract</a></li>
+                <li><a href="#design">Benchmark</a></li>
+                <li><a href="#domains">Domains</a></li>
+                <li><a href="#pipeline">Methodology</a></li>
+                <li><a href="#figures">Figures</a></li>
+                <li><a href="#downloads">Downloads</a></li>
             </ul>
+            <div class="nav-actions">
+                <a class="btn btn-ghost" href="https://github.com/hsz0403/CryptoBench.github.io" target="_blank" rel="noopener">GitHub</a>
+                <a class="btn btn-primary" href="assets/docs/CryptoBench.tex" download>TeX Source</a>
+            </div>
         </div>
     </header>
 
-    <section class="ticker" aria-label="rolling stats">
-        <div class="ticker-track">
-            <span>Retrieval–Prediction Imbalance · Agentic 框架重排模型排名 · 模板化变量防止数据污染 · 必须进行工具编排</span>
-            <span>Retrieval–Prediction Imbalance · Agentic 框架重排模型排名 · 模板化变量防止数据污染 · 必须进行工具编排</span>
+    <section class="hero" id="top">
+        <div class="hero-content">
+            <p class="eyebrow">Live window · 12–18 Oct</p>
+            <h1>CryptoBench: Evaluating LLM Agents in the most adversarial market.</h1>
+            <p class="subtitle">
+                CryptoBench is the first crypto-native benchmark authored by DeFi analysts, on-chain investigators, and derivatives traders. It ships 50 new questions every month, forcing agents to retrieve, reason, and predict under real market pressure.
+            </p>
+            <div class="hero-buttons">
+                <a class="btn btn-primary" href="#abstract">Read the paper overview</a>
+                <a class="btn btn-secondary" href="#figures">Jump to figures</a>
+            </div>
+            <div class="hero-stats">
+                <div>
+                    <span>50</span>
+                    Monthly tasks
+                </div>
+                <div>
+                    <span>4</span>
+                    Retrieval × prediction quadrants
+                </div>
+                <div>
+                    <span>20+</span>
+                    Live data platforms
+                </div>
+                <div>
+                    <span>10</span>
+                    LLM / agent configurations
+                </div>
+            </div>
         </div>
     </section>
 
-    <main>
-        <section class="metrics" id="abstract">
+    <main class="main-content">
+        <section class="section" id="abstract">
             <div class="section-header">
-                <p class="eyebrow">论文摘要</p>
-                <h2>为什么需要一个加密原生的 Agent Benchmark？</h2>
+                <h2>Abstract</h2>
+                <p class="section-subtitle">From the CryptoBench paper: “CryptoBench: A Dynamic Benchmark for Expert-Level Evaluation of LLM Agents in Cryptocurrency”.</p>
+            </div>
+            <div class="abstract">
                 <p>
-                    一般 Agent 指标忽视了加密市场的高时效性、对抗性与多源数据需求。CryptoBench 通过四象限任务体系（简单/复杂 × 检索/预测）和每月更新的题库，检验模型在真实 analyst 工作流中的检索、综合与推理能力。实验揭示了 “retrieval-prediction imbalance”——许多顶尖模型在查找数据时表现优秀，但在预测和综合环节明显失衡。
+                    The paper introduces CryptoBench, a live benchmark that stress-tests LLM agents in time-sensitive, adversarial crypto workflows. Existing agent benchmarks overlook the need to synthesize on-chain intelligence, market data, DEX flows, and MEV alerts. CryptoBench delivers 50 domain-authentic questions per month, categorized into Simple/Complex Retrieval and Simple/Complex Prediction, mirroring professional analyst workloads.
+                </p>
+                <p>
+                    Evaluating ten state-of-the-art LLMs (with and without the SmolAgent framework) reveals a pronounced <em>retrieval–prediction imbalance</em>: models that excel at factual lookup frequently collapse on predictive reasoning. Agentic orchestration can reshuffle leaderboard positions, proving that raw model IQ does not equal field performance.
                 </p>
             </div>
-            <div class="card-grid four">
+        </section>
+
+        <section class="section" id="design">
+            <div class="section-header">
+                <h2>Benchmark Design</h2>
+                <p class="section-subtitle">Section 3 of the paper highlights three design principles.</p>
+            </div>
+            <div class="card-grid">
                 <article class="card">
-                    <h3>场景驱动</h3>
-                    <p>题目由 DeFi 风控、量化交易员、链上调查员共同撰写，严格对应真实工作流。</p>
+                    <h3>Professional task authorship</h3>
+                    <p>Every prompt is drafted by crypto-native researchers—DeFi risk teams, on-chain sleuths, and quantitative traders—to ensure ecological validity.</p>
                 </article>
                 <article class="card">
-                    <h3>动态更新</h3>
-                    <p>通过模板化变量（地址、Ticker、时间窗）实现季度刷新，降低模型被“背答案”的可能。</p>
+                    <h3>Dynamic refresh</h3>
+                    <p>Template variables (wallets, tickers, time windows) are swapped quarterly, preventing memorization and keeping pace with new primitives like restaking and intent layers.</p>
                 </article>
                 <article class="card">
-                    <h3>工具编排</h3>
-                    <p>任务要求访问官方 Dashboard、DEX/衍生品终端、链上情报和 AI signal 平台。</p>
+                    <h3>Broad platform coverage</h3>
+                    <p>Tasks require navigating on-chain explorers, CeFi + DeFi dashboards, derivatives terminals, DEX routing tools, and AI-generated signal feeds.</p>
                 </article>
                 <article class="card">
-                    <h3>Agent 友好</h3>
-                    <p>同一题目同时评估原生 LLM 与 SmolAgent 流程，检验规划与工具调用对成绩的影响。</p>
+                    <h3>Tool orchestration focus</h3>
+                    <p>Agents must pick authoritative sources, adapt to UX quirks, and reconcile conflicting feeds before answering—mirroring real analyst workflows.</p>
                 </article>
             </div>
         </section>
 
-        <section class="design" id="contrib">
+        <section class="section" id="domains">
             <div class="section-header">
-                <p class="eyebrow">论文贡献</p>
-                <h2>CryptoBench 的三项核心贡献。</h2>
+                <h2>Crypto-native Task Domains</h2>
+                <p class="section-subtitle">Section 3.1 enumerates the skill diversity tested each month.</p>
             </div>
-            <div class="card-grid three">
-                <article class="glass">
-                    <h3>任务专业性与多样性</h3>
-                    <p>覆盖 on-chain intelligence、市场数据、DeFi/Oracle、DEX & Derivatives、MEV & AI Signals 五大纵深领域。</p>
+            <div class="sectors-grid">
+                <article class="sector-item">
+                    <h4>On-chain Intelligence</h4>
+                    <p>Wallet archetyping, exploit tracing, whale/KOL flow, phishing and “rat trading” detection.</p>
                 </article>
-                <article class="glass">
-                    <h3>动态“活”基准</h3>
-                    <p>季度更新题库，引入新叙事（如 restaking、模组化链、intent layer），保持长期有效性。</p>
+                <article class="sector-item">
+                    <h4>Market Data</h4>
+                    <p>Liquidations, funding rates, open interest, and macro volatility feeds stitched together in real time.</p>
                 </article>
-                <article class="glass">
-                    <h3>广泛平台覆盖</h3>
-                    <p>迫使 Agent 选择正确的数据源、处理 UI 差异并综合冲突信息，真实模拟分析师日常。</p>
+                <article class="sector-item">
+                    <h4>DeFi & Oracle Analytics</h4>
+                    <p>Protocol dashboards for TVL/TVS, oracle drift analysis, and risk surface comparisons.</p>
+                </article>
+                <article class="sector-item">
+                    <h4>DEX & Derivatives</h4>
+                    <p>Order-flow toxicity, AMM routing, basis spreads, and delta-hedge stress testing.</p>
+                </article>
+                <article class="sector-item">
+                    <h4>MEV & AI Signals</h4>
+                    <p>Intent mempools, bundle profitability, and model-generated trade alerts from crypto-native terminals.</p>
                 </article>
             </div>
         </section>
 
-        <section class="domains" id="method">
+        <section class="section" id="pipeline">
             <div class="section-header">
-                <p class="eyebrow">方法概览</p>
-                <h2>从任务设计到评分的端到端流水线。</h2>
-                <p>下列流程对应 main.tex 的 Section 3（Benchmark）与 Section 4（Experiments）。</p>
+                <h2>Dataset Construction & Evaluation Protocol</h2>
+                <p class="section-subtitle">Summarized from Sections 3.2 and 4.</p>
             </div>
-            <div class="card-grid five">
+            <div class="timeline">
                 <article>
-                    <h4>任务模板</h4>
-                    <p>根据当前市场结构实例化变量（地址、交易哈希、时间窗口）。</p>
-                </article>
-                <article>
-                    <h4>参考答案</h4>
-                    <p>作者从权威 Dashboard 与交易终端抓取数据并截图存档。</p>
-                </article>
-                <article>
-                    <h4>模型设置</h4>
-                    <p>评估 Grok-4 系列、GPT-5、Qwen3-Max、Gemini 2.5 Pro 等 10 个模型。</p>
-                </article>
-                <article>
-                    <h4>Agent 执行</h4>
-                    <p>分别运行直接 LLM 调用与 SmolAgent 版本，保持工具权限一致。</p>
+                    <h3>1 · Prompt templating</h3>
+                    <p>Authors lock key variables (addresses, hashes, timeframes) inside reusable templates to accelerate monthly refreshes.</p>
                 </article>
                 <article>
-                    <h4>评分与分析</h4>
-                    <p>按正确性、综合度、预测准确率和引用来源打分，并记录失败模式。</p>
+                    <h3>2 · Evidence capture</h3>
+                    <p>Reference answers are harvested from official dashboards with timestamps and stored screenshots for auditing.</p>
                 </article>
+                <article>
+                    <h3>3 · Dual evaluation</h3>
+                    <p>Each task is run both as direct LLM calls and through the SmolAgent framework with identical tool permissions.</p>
+                </article>
+                <article>
+                    <h3>4 · Scoring & QC</h3>
+                    <p>Outputs are graded for factuality, synthesis, and prediction accuracy; two-person review resolves disputes and logs failure modes.</p>
+                </article>
+            </div>
+            <div class="experiment-setup">
+                <p><strong>Models:</strong> Grok-4 (Web & Fast), GPT-5, GPT-OSS-120B, Qwen3-Max, Gemini 2.5 Pro, DeepSeek R1, and others.</p>
+                <p><strong>Metrics:</strong> Accuracy per quadrant, macro-category radar, difficulty split, and qualitative diagnostics.</p>
+                <p><strong>Time window:</strong> 12–18 Oct, ensuring identical market conditions for every run.</p>
             </div>
         </section>
 
-        <section class="pipeline">
+        <section class="section" id="failures">
             <div class="section-header">
-                <p class="eyebrow">质量控制</p>
-                <h2>Dataset Construction & Quality Control</h2>
-                <p>根据论文 Section 3.2，题目由加密原生团队双人复核：一人设计、一人验证答案，必要时回溯链上记录。</p>
+                <h2>Observed Failure Modes</h2>
+                <p class="section-subtitle">Section 5.4 highlights four recurring issues.</p>
             </div>
-            <ol class="timeline">
-                <li>
-                    <h3>Prompt 模板与变量锁定</h3>
-                    <p>把 token、钱包、交易对、时间窗拆分为可替换变量，降低手工成本。</p>
-                </li>
-                <li>
-                    <h3>证据采集</h3>
-                    <p>为每题附上来源链接与截图，提供审计轨迹。</p>
-                </li>
-                <li>
-                    <h3>交叉审阅</h3>
-                    <p>第二位作者独立复现操作，确认可重复性。</p>
-                </li>
-                <li>
-                    <h3>上线与监控</h3>
-                    <p>题目进入当月发布池，异常反馈会触发修订与变量切换。</p>
-                </li>
-            </ol>
+            <div class="card-grid">
+                <article class="card">
+                    <h3>Shallow search & source fidelity</h3>
+                    <p>Agents quote outdated blog posts instead of navigating to official protocol dashboards for live TVL or liquidation data.</p>
+                </article>
+                <article class="card">
+                    <h3>Stale information</h3>
+                    <p>Cached snippets lag behind volatile metrics (e.g., reporting 14% liquidation share when the reference is 79%).</p>
+                </article>
+                <article class="card">
+                    <h3>Integration errors</h3>
+                    <p>Models retrieve correct numbers yet fail to compute spreads or rankings—concluding SOL outperformed BTC in Q1 2025 when the opposite is true.</p>
+                </article>
+                <article class="card">
+                    <h3>Prediction hallucination</h3>
+                    <p>Agents fabricate trending-token lists instead of grounding predictions in gmgn.ai or other mandated sources.</p>
+                </article>
+            </div>
         </section>
 
-        <section class="quadrants">
+        <section class="section" id="figures">
             <div class="section-header">
-                <p class="eyebrow">任务象限</p>
-                <h2>Retrieval × Prediction 的四象限刻画。</h2>
-                <p>Figure1.pdf 与 Figure2.pdf 展示了象限和整体流程，下方 PDF 画廊可直接预览。</p>
+                <h2>Figures from the Paper</h2>
+                <p class="section-subtitle">Each PDF below is embedded separately with the description taken from the corresponding paragraph in <code>main.tex</code>.</p>
             </div>
-            <div class="card-grid four">
-                <article class="quadrant">
-                    <span>01 · Simple Retrieval</span>
-                    <p>高速查询最新的 TVL、Funding Rate、Whale Flow。大多数模型得分最高。</p>
+            <div class="figure-grid">
+                <article class="figure-card">
+                    <h3>Figure 1. Combined Evaluation Scores</h3>
+                    <p>This overview contrasts direct LLM evaluation with the SmolAgent setup between 12–18 Oct, showing how agentic scaffolding can reshuffle rankings.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/3_combined_eval_scores.pdf#toolbar=0&view=fitH" title="Combined Evaluation Scores"></iframe>
+                    <a class="download-link" href="assets/pdfs/3_combined_eval_scores.pdf" download>Download PDF</a>
                 </article>
-                <article class="quadrant">
-                    <span>02 · Complex Retrieval</span>
-                    <p>多跳搜索 + 多源比对，惩罚浅层搜索与旧数据。</p>
+                <article class="figure-card">
+                    <h3>Figure 2. LLM-only Leaderboard</h3>
+                    <p>Direct prompts reveal Grok-4 (Web) clearly leading at 1.32 points, with GPT-5 trailing at 0.90 and a long tail of underperforming models.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/1_llm_eval_scores.pdf#toolbar=0&view=fitH" title="LLM Evaluation Scores"></iframe>
+                    <a class="download-link" href="assets/pdfs/1_llm_eval_scores.pdf" download>Download PDF</a>
                 </article>
-                <article class="quadrant">
-                    <span>03 · Simple Prediction</span>
-                    <p>以实时数据为支撑的短期预测，GPT-5 在此仅 6.25% 准确率。</p>
+                <article class="figure-card">
+                    <h3>Figure 3. SmolAgent Leaderboard</h3>
+                    <p>When the same models run inside SmolAgent, Grok-4 still leads but Qwen3-Max and Gemini 2.5 Pro close the gap—evidence that planning and tool use matter.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/2_smolagent_eval_scores.pdf#toolbar=0&view=fitH" title="SmolAgent Evaluation Scores"></iframe>
+                    <a class="download-link" href="assets/pdfs/2_smolagent_eval_scores.pdf" download>Download PDF</a>
                 </article>
-                <article class="quadrant">
-                    <span>04 · Complex Prediction</span>
-                    <p>需综合多平台证据做情景推演，是区分 Agent 水平的关键。</p>
+                <article class="figure-card">
+                    <h3>Figure 4. Task Distribution</h3>
+                    <p>A balanced mix of the four quadrants ensures no single ability can dominate the benchmark or inflate scores.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/A_task_distribution.pdf#toolbar=0&view=fitH" title="Task Distribution"></iframe>
+                    <a class="download-link" href="assets/pdfs/A_task_distribution.pdf" download>Download PDF</a>
+                </article>
+                <article class="figure-card">
+                    <h3>Figure 5. Platform Distribution</h3>
+                    <p>CryptoBench compels agents to interact with more than 20 live data surfaces, from on-chain explorers to intent-based MEV dashboards.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/B_platform_distribution.pdf#toolbar=0&view=fitH" title="Platform Distribution"></iframe>
+                    <a class="download-link" href="assets/pdfs/B_platform_distribution.pdf" download>Download PDF</a>
+                </article>
+                <article class="figure-card">
+                    <h3>Figure 6. Performance by Difficulty</h3>
+                    <p>All models degrade on complex tasks; Grok-4 drops roughly 10 percentage points while GPT-5 collapses by more than 25.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/C_performance_by_difficulty.pdf#toolbar=0&view=fitH" title="Performance by Difficulty"></iframe>
+                    <a class="download-link" href="assets/pdfs/C_performance_by_difficulty.pdf" download>Download PDF</a>
+                </article>
+                <article class="figure-card">
+                    <h3>Figure 7. Retrieval vs. Prediction</h3>
+                    <p>The retrieval–prediction imbalance is stark: GPT-5 reaches 41% on retrieval but only 6.25% on prediction.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/D_performance_by_task_family.pdf#toolbar=0&view=fitH" title="Performance by Task Family"></iframe>
+                    <a class="download-link" href="assets/pdfs/D_performance_by_task_family.pdf" download>Download PDF</a>
+                </article>
+                <article class="figure-card">
+                    <h3>Figure 8. Macro-category Radar</h3>
+                    <p>Top models perform best in general “Other” tasks, while DeFi analytics, DEX data, and derivatives remain challenging.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/E_performance_by_category_radar.pdf#toolbar=0&view=fitH" title="Performance by Category"></iframe>
+                    <a class="download-link" href="assets/pdfs/E_performance_by_category_radar.pdf" download>Download PDF</a>
+                </article>
+                <article class="figure-card">
+                    <h3>Figure 9. Task Quadrants</h3>
+                    <p>Simple retrieval is saturated, but complex prediction exposes the largest gaps, confirming the need for multi-hop reasoning.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/F_performance_by_task_quadrant.pdf#toolbar=0&view=fitH" title="Performance by Quadrant"></iframe>
+                    <a class="download-link" href="assets/pdfs/F_performance_by_task_quadrant.pdf" download>Download PDF</a>
+                </article>
+                <article class="figure-card">
+                    <h3>Figure 10. Four-Quadrant Framework</h3>
+                    <p>Illustrates the Simple/Complex × Retrieval/Prediction matrix that underpins task authoring and score reporting.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/Figure1.pdf#toolbar=0&view=fitH" title="Quadrant Framework"></iframe>
+                    <a class="download-link" href="assets/pdfs/Figure1.pdf" download>Download PDF</a>
+                </article>
+                <article class="figure-card">
+                    <h3>Figure 11. Benchmark Pipeline</h3>
+                    <p>Shows the end-to-end workflow: question authoring, data capture, agent execution, scoring, and diagnostics.</p>
+                    <iframe class="figure-frame" src="assets/pdfs/Figure2.pdf#toolbar=0&view=fitH" title="Benchmark Pipeline"></iframe>
+                    <a class="download-link" href="assets/pdfs/Figure2.pdf" download>Download PDF</a>
                 </article>
             </div>
         </section>
 
-        <section class="results" id="results">
+        <section class="section" id="downloads">
             <div class="section-header">
-                <p class="eyebrow">实验结果（Section 5）</p>
-                <h2>全部图表 PDF 可在线预览并下载。</h2>
-                <p>包含排行榜、任务分布、难度拆分、类别雷达与象限热力图，来自 <code>cryptoBench/images</code>。</p>
+                <h2>Download the CryptoBench Kit</h2>
+                <p class="section-subtitle">Static site + TeX source = instant GitHub Pages deployment.</p>
             </div>
-            <div id="chart-grid" class="chart-grid"></div>
-        </section>
-
-        <section class="failures">
-            <div class="section-header">
-                <p class="eyebrow">失败模式（Section 5.4）</p>
-                <h2>人工复核总结的四个高频问题。</h2>
-            </div>
-            <div id="failure-grid" class="card-grid four"></div>
-        </section>
-
-        <section class="cta" id="downloads">
-            <div class="cta-content">
-                <p class="eyebrow">下载素材</p>
-                <h2>获取 TeX 原文与全部图表，快速部署 github.io。</h2>
-                <p>仓库仅包含静态文件：<code>index.html</code> + <code>assets</code>。推送到 GitHub Pages 即可上线。</p>
-                <div class="hero-actions">
-                    <a class="btn primary" href="assets/pdfs/3_combined_eval_scores.pdf" download>下载 Combined Scores</a>
-                    <a class="btn ghost" href="assets/docs/CryptoBench.tex" download>下载 TeX</a>
-                </div>
+            <div class="download-actions">
+                <a class="btn btn-primary" href="https://github.com/hsz0403/CryptoBench.github.io" target="_blank" rel="noopener">GitHub Repository</a>
+                <a class="btn btn-secondary" href="assets/docs/CryptoBench.tex" download>Download TeX</a>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>CryptoBench · A Dynamic Benchmark for Expert-Level Evaluation of LLM Agents in Cryptocurrency.</p>
+        <p>© CryptoBench. Dynamic benchmark for expert-level evaluation of LLM agents in cryptocurrency.</p>
     </footer>
 </body>
 </html>
