@@ -25,12 +25,6 @@
                 <li><a href="#leaderboard">Leaderboard</a></li>
                 <li><a href="#downloads">Downloads</a></li>
             </ul>
-            <div class="nav-actions">
-                <a class="btn btn-ghost" href="https://github.com/hsz0403/CryptoBench.github.io" target="_blank" rel="noopener">GitHub</a>
-                <a class="btn btn-primary" href="#" aria-disabled="true">Paper PDF (soon)</a>
-                <a class="btn btn-secondary" href="#leaderboard">Leaderboard</a>
-                <a class="btn btn-ghost" href="#design">Explore Benchmark</a>
-            </div>
         </div>
     </header>
 
@@ -42,8 +36,10 @@
                 CryptoBench is the first crypto-native benchmark authored by DeFi analysts, on-chain investigators, and derivatives traders. It ships 50 new questions every month, forcing agents to retrieve, reason, and predict under real market pressure.
             </p>
             <div class="hero-buttons">
-                <a class="btn btn-primary" href="#abstract">Read the paper overview</a>
-                <a class="btn btn-secondary" href="#leaderboard">Jump to figures</a>
+                <a class="btn btn-primary" href="#" aria-disabled="true">Paper PDF (soon)</a>
+                <a class="btn btn-ghost" href="https://github.com/hsz0403/CryptoBench.github.io" target="_blank" rel="noopener">GitHub</a>
+                <a class="btn btn-secondary" href="#design">Explore benchmark</a>
+                <a class="btn btn-ghost" href="#leaderboard">Leaderboard</a>
             </div>
             <div class="hero-stats">
                 <div>
@@ -212,10 +208,37 @@
             </div>
         </section>
 
+        <section class="section" id="metrics">
+            <div class="section-header">
+                <h2>Benchmark Metrics</h2>
+                <p class="section-subtitle">Distribution and coverage visualizations that describe how CryptoBench samples tasks and platforms.</p>
+            </div>
+            <div class="figure-stack">
+                <article class="figure-full">
+                    <h3>Figure 4. Task Distribution</h3>
+                    <p>CryptoBench balances the four quadrants so no single capability can game the benchmark or inflate scores.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/A_task_distribution.pdf#toolbar=0&view=FitH" title="Task Distribution"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/A_task_distribution.pdf" download>Download PDF</a></p>
+                </article>
+                <article class="figure-full">
+                    <h3>Figure 5. Platform Distribution</h3>
+                    <p>Agents must interact with 20+ live surfaces—from on-chain explorers to intent-based MEV dashboards—to answer correctly.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/B_platform_distribution.pdf#toolbar=0&view=FitH" title="Platform Distribution"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/B_platform_distribution.pdf" download>Download PDF</a></p>
+                </article>
+                <article class="figure-full">
+                    <h3>Figure 8. Macro-category Radar</h3>
+                    <p>Top models perform best in general “Other” tasks, while DeFi analytics, DEX data, and derivatives remain challenging.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/E_performance_by_category_radar.pdf#toolbar=0&view=FitH" title="Performance by Category"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/E_performance_by_category_radar.pdf" download>Download PDF</a></p>
+                </article>
+            </div>
+        </section>
+
         <section class="section" id="leaderboard">
             <div class="section-header">
-                <h2>Leaderboard & Metrics</h2>
-                <p class="section-subtitle">Performance charts for the 12–18 Oct window, covering overall scores, breakdowns, and domain-level diagnostics.</p>
+                <h2>Leaderboards</h2>
+                <p class="section-subtitle">Scorecards for direct LLM calls and SmolAgent runs, plus the most diagnostic breakdowns.</p>
             </div>
             <div class="figure-stack">
                 <article class="figure-full">
@@ -237,18 +260,6 @@
                     <p class="figure-meta"><a href="assets/pdfs/2_smolagent_eval_scores.pdf" download>Download PDF</a></p>
                 </article>
                 <article class="figure-full">
-                    <h3>Figure 4. Task Distribution</h3>
-                    <p>CryptoBench balances the four quadrants so no single capability can game the benchmark or inflate scores.</p>
-                    <iframe class="figure-embed" src="assets/pdfs/A_task_distribution.pdf#toolbar=0&view=FitH" title="Task Distribution"></iframe>
-                    <p class="figure-meta"><a href="assets/pdfs/A_task_distribution.pdf" download>Download PDF</a></p>
-                </article>
-                <article class="figure-full">
-                    <h3>Figure 5. Platform Distribution</h3>
-                    <p>Agents must interact with 20+ live surfaces—from on-chain explorers to intent-based MEV dashboards—to answer correctly.</p>
-                    <iframe class="figure-embed" src="assets/pdfs/B_platform_distribution.pdf#toolbar=0&view=FitH" title="Platform Distribution"></iframe>
-                    <p class="figure-meta"><a href="assets/pdfs/B_platform_distribution.pdf" download>Download PDF</a></p>
-                </article>
-                <article class="figure-full">
                     <h3>Figure 6. Performance by Difficulty</h3>
                     <p>All models degrade on complex tasks; Grok-4 drops roughly 10 percentage points while GPT-5 collapses by more than 25.</p>
                     <iframe class="figure-embed" src="assets/pdfs/C_performance_by_difficulty.pdf#toolbar=0&view=FitH" title="Performance by Difficulty"></iframe>
@@ -259,12 +270,6 @@
                     <p>The retrieval–prediction imbalance is stark: GPT-5 reaches 41% on retrieval but only 6.25% on prediction.</p>
                     <iframe class="figure-embed" src="assets/pdfs/D_performance_by_task_family.pdf#toolbar=0&view=FitH" title="Performance by Task Family"></iframe>
                     <p class="figure-meta"><a href="assets/pdfs/D_performance_by_task_family.pdf" download>Download PDF</a></p>
-                </article>
-                <article class="figure-full">
-                    <h3>Figure 8. Macro-category Radar</h3>
-                    <p>Top models perform best in general “Other” tasks, while DeFi analytics, DEX data, and derivatives remain challenging.</p>
-                    <iframe class="figure-embed" src="assets/pdfs/E_performance_by_category_radar.pdf#toolbar=0&view=FitH" title="Performance by Category"></iframe>
-                    <p class="figure-meta"><a href="assets/pdfs/E_performance_by_category_radar.pdf" download>Download PDF</a></p>
                 </article>
                 <article class="figure-full">
                     <h3>Figure 9. Task Quadrants</h3>
