@@ -18,15 +18,18 @@
             <a class="logo" href="#top">CryptoBench</a>
             <ul class="nav-links">
                 <li><a href="#abstract">Abstract</a></li>
+                <li><a href="#system">System</a></li>
                 <li><a href="#design">Benchmark</a></li>
                 <li><a href="#domains">Domains</a></li>
                 <li><a href="#pipeline">Methodology</a></li>
-                <li><a href="#figures">Figures</a></li>
+                <li><a href="#leaderboard">Leaderboard</a></li>
                 <li><a href="#downloads">Downloads</a></li>
             </ul>
             <div class="nav-actions">
                 <a class="btn btn-ghost" href="https://github.com/hsz0403/CryptoBench.github.io" target="_blank" rel="noopener">GitHub</a>
                 <a class="btn btn-primary" href="#" aria-disabled="true">Paper PDF (soon)</a>
+                <a class="btn btn-secondary" href="#leaderboard">Leaderboard</a>
+                <a class="btn btn-ghost" href="#design">Explore Benchmark</a>
             </div>
         </div>
     </header>
@@ -40,7 +43,7 @@
             </p>
             <div class="hero-buttons">
                 <a class="btn btn-primary" href="#abstract">Read the paper overview</a>
-                <a class="btn btn-secondary" href="#figures">Jump to figures</a>
+                <a class="btn btn-secondary" href="#leaderboard">Jump to figures</a>
             </div>
             <div class="hero-stats">
                 <div>
@@ -76,6 +79,27 @@
                 <p>
                     Evaluating ten state-of-the-art LLMs (with and without the SmolAgent framework) reveals a pronounced <em>retrieval–prediction imbalance</em>: models that excel at factual lookup frequently collapse on predictive reasoning. Agentic orchestration can reshuffle leaderboard positions, proving that raw model IQ does not equal field performance.
                 </p>
+            </div>
+        </section>
+
+        <section class="section" id="system">
+            <div class="section-header">
+                <h2>System Overview</h2>
+                <p class="section-subtitle">High-level architecture diagrams (Figures 10 & 11) summarizing the quadrant framework and the evaluation pipeline.</p>
+            </div>
+            <div class="figure-stack">
+                <article class="figure-full">
+                    <h3>Figure 10. Four-Quadrant Framework</h3>
+                    <p>Illustrates the Simple/Complex × Retrieval/Prediction matrix that guides task authoring and score reporting each month.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/Figure1.pdf#toolbar=0&view=FitH" title="Quadrant Framework"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/Figure1.pdf" download>Download PDF</a></p>
+                </article>
+                <article class="figure-full">
+                    <h3>Figure 11. Benchmark Pipeline</h3>
+                    <p>Shows the end-to-end workflow: question authoring, live data capture, agent execution, scoring, and diagnostics.</p>
+                    <iframe class="figure-embed" src="assets/pdfs/Figure2.pdf#toolbar=0&view=FitH" title="Benchmark Pipeline"></iframe>
+                    <p class="figure-meta"><a href="assets/pdfs/Figure2.pdf" download>Download PDF</a></p>
+                </article>
             </div>
         </section>
 
@@ -188,10 +212,10 @@
             </div>
         </section>
 
-        <section class="section" id="figures">
+        <section class="section" id="leaderboard">
             <div class="section-header">
-                <h2>Figures from the Paper</h2>
-                <p class="section-subtitle">Each PDF is rendered full-width so readers can inspect the benchmark visuals without leaving the page. Captions are sourced from the relevant sections of <code>main.tex</code>.</p>
+                <h2>Leaderboard & Metrics</h2>
+                <p class="section-subtitle">Performance charts for the 12–18 Oct window, covering overall scores, breakdowns, and domain-level diagnostics.</p>
             </div>
             <div class="figure-stack">
                 <article class="figure-full">
@@ -247,18 +271,6 @@
                     <p>Simple retrieval is saturated, but complex prediction exposes the largest gaps, confirming the need for multi-hop reasoning.</p>
                     <iframe class="figure-embed" src="assets/pdfs/F_performance_by_task_quadrant.pdf#toolbar=0&view=FitH" title="Performance by Quadrant"></iframe>
                     <p class="figure-meta"><a href="assets/pdfs/F_performance_by_task_quadrant.pdf" download>Download PDF</a></p>
-                </article>
-                <article class="figure-full">
-                    <h3>Figure 10. Four-Quadrant Framework</h3>
-                    <p>Illustrates the Simple/Complex × Retrieval/Prediction matrix that guides task authoring and score reporting.</p>
-                    <iframe class="figure-embed" src="assets/pdfs/Figure1.pdf#toolbar=0&view=FitH" title="Quadrant Framework"></iframe>
-                    <p class="figure-meta"><a href="assets/pdfs/Figure1.pdf" download>Download PDF</a></p>
-                </article>
-                <article class="figure-full">
-                    <h3>Figure 11. Benchmark Pipeline</h3>
-                    <p>Shows the end-to-end workflow: question authoring, data capture, agent execution, scoring, and diagnostics.</p>
-                    <iframe class="figure-embed" src="assets/pdfs/Figure2.pdf#toolbar=0&view=FitH" title="Benchmark Pipeline"></iframe>
-                    <p class="figure-meta"><a href="assets/pdfs/Figure2.pdf" download>Download PDF</a></p>
                 </article>
             </div>
         </section>
