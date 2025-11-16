@@ -290,12 +290,13 @@ body {
 .timeline article {
   margin-bottom: 1.8rem;
   position: relative;
+  padding-left: 0.75rem;
 }
 
 .timeline article::before {
   content: "";
   position: absolute;
-  left: -10px;
+  left: -18px;
   top: 0.4rem;
   width: 12px;
   height: 12px;
