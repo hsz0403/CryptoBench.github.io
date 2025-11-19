@@ -354,11 +354,14 @@ body {
 
 .figure-embed {
   width: 100%;
-  min-height: 650px;
+  aspect-ratio: 4 / 5;
+  height: auto;
+  min-height: 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 18px;
   margin-top: 1.5rem;
   background: #050b16;
+  overflow: hidden;
 }
 
 .figure-meta {
@@ -389,9 +392,6 @@ footer {
     display: none;
   }
 
-  .figure-embed {
-    min-height: 520px;
-  }
 }
 
 @media (max-width: 600px) {
