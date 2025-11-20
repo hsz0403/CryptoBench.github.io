@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
   if (!window.pdfjsLib) return;
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   document.querySelectorAll('.figure-canvas').forEach((canvas) => {
     const url = canvas.dataset.pdf;
     if (!url) return;
