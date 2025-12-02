@@ -394,3 +394,16 @@ footer {
     left: 0;
   }
 }
+
+.contact-blurb {
+  text-align: center;
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 1rem auto 0;
+}
+
+.contact-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
